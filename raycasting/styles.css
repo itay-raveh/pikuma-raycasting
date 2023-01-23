@@ -1,7 +1,11 @@
+* {
+  font-family: monospace;
+  color: white;
+  text-align: center;
+}
+
 html,
 body {
-  margin: 0;
-  padding: 0;
   background: #555;
 }
 
@@ -11,4 +15,27 @@ canvas {
   border-style: solid;
   border-width: 8px;
   border-color: #fff;
+}
+
+h1 {
+  display: block;
+  margin: 0 auto;
+}
+
+button {
+  background-color: cadetblue;
+  border-color: cadetblue;
+  border-radius: 5px;
+  padding: 0.5rem;
+}
+
+button:hover {
+  border-color: white;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin: 1rem;
 }

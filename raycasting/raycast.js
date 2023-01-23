@@ -11,7 +11,9 @@ const RAY_LEN = 50;
 const DARK = "#222";
 const LIGHT = "#fff";
 
-const DEBUG = false;
+let SHOW_INDICES = false;
+let SHOW_COORDS = false;
+let SHOW_GRID = true;
 
 class Map {
   constructor() {
@@ -36,14 +38,21 @@ class Map {
         const x = j * TILE_SIZE;
         const y = i * TILE_SIZE;
 
-        stroke(DARK);
+        if (SHOW_GRID) stroke(DARK);
+        else noStroke();
+
         fill(this.grid[i][j] ? DARK : LIGHT);
         rect(x, y, TILE_SIZE, TILE_SIZE);
 
-        if (DEBUG) {
+        if (SHOW_INDICES || SHOW_COORDS) {
           noStroke();
           fill("grey");
-          text(`${j},${i}`, x + HALF_TILE, y + HALF_TILE);
+
+          const tx = x + HALF_TILE;
+          const ty = y + HALF_TILE;
+
+          if (SHOW_INDICES) text(`${j},${i}`, tx, ty);
+          if (SHOW_COORDS) text(`${x},${y}`, tx, ty);
         }
       }
     }
@@ -94,12 +103,15 @@ class Player {
       this.y + Math.sin(this.angle) * RAY_LEN
     );
 
-    if (DEBUG)
-      text(
-        `${pixels2index(this.y)},${pixels2index(this.x)}`,
-        this.x + HALF_TILE / 2,
-        this.y + HALF_TILE / 2
-      );
+    if (SHOW_INDICES || SHOW_COORDS) {
+      const tx = this.x + HALF_TILE / 2;
+      const ty = this.y + HALF_TILE / 2;
+
+      if (SHOW_INDICES)
+        text(`${pixels2index(this.y)},${pixels2index(this.x)}`, tx, ty);
+      if (SHOW_COORDS)
+        text(`${Math.round(this.y)},${Math.round(this.x)}`, tx, ty);
+    }
   }
 }
 
