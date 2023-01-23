@@ -5,6 +5,8 @@ const MAP_NUM_COLS = 15;
 const WINDOW_WIDTH = MAP_NUM_COLS * TILE_SIZE;
 const WINDOW_HEIGHT = MAP_NUM_ROWS * TILE_SIZE;
 
+const RAY_LEN = 50;
+
 const DARK = "#222";
 const LIGHT = "#fff";
 
@@ -47,7 +49,7 @@ class Player {
 
     this.turnOffset = 0;
     this.walkOffset = 0;
-    this.angle = Math.PI;
+    this.angle = Math.PI / 2;
     this.moveSpeed = 2.0;
     this.rotationSpeed = 2 * (Math.PI / 180);
   }
@@ -57,8 +59,16 @@ class Player {
   }
 
   draw() {
+    noStroke();
     fill("red");
     circle(this.x, this.y, this.radius);
+    stroke("red");
+    line(
+      this.x,
+      this.y,
+      this.x + Math.cos(this.angle) * RAY_LEN,
+      this.y + Math.sin(this.angle) * RAY_LEN
+    );
   }
 }
 
