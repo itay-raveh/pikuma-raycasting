@@ -26,6 +26,7 @@ class Map {
   }
 
   draw() {
+    stroke(DARK);
     for (const i in this.grid) {
       for (const j in this.grid[i]) {
         const x = j * TILE_SIZE;
@@ -38,16 +39,42 @@ class Map {
   }
 }
 
+class Player {
+  constructor() {
+    this.x = WINDOW_WIDTH / 2;
+    this.y = WINDOW_HEIGHT / 2;
+    this.radius = 5;
+
+    this.turnOffset = 0;
+    this.walkOffset = 0;
+    this.angle = Math.PI;
+    this.moveSpeed = 2.0;
+    this.rotationSpeed = 2 * (Math.PI / 180);
+  }
+
+  update() {
+    // TODO
+  }
+
+  draw() {
+    fill("red");
+    circle(this.x, this.y, this.radius);
+  }
+}
+
 const grid = new Map();
+const player = new Player();
 
 function setup() {
   createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
-  stroke(DARK);
 }
 
-function update() {}
+function update() {
+  player.update();
+}
 
 function draw() {
   update();
   grid.draw();
+  player.draw();
 }
