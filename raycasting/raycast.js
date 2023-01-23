@@ -13,7 +13,7 @@ const LIGHT = "#fff";
 
 let SHOW_INDICES = false;
 let SHOW_COORDS = false;
-let SHOW_GRID = true;
+let SHOW_GRID = false;
 
 class Map {
   constructor() {
@@ -132,7 +132,22 @@ function keyPressed() {
     case LEFT_ARROW:
       player.turnOffset -= 1;
       break;
-    default:
+  }
+}
+
+function keyTyped() {
+  switch (key) {
+    case "g":
+    case "G":
+      SHOW_GRID = !SHOW_GRID;
+      break;
+    case "i":
+    case "I":
+      SHOW_INDICES = !SHOW_INDICES;
+      break;
+    case "c":
+    case "C":
+      SHOW_COORDS = !SHOW_COORDS;
       break;
   }
 }
@@ -150,8 +165,6 @@ function keyReleased() {
       break;
     case LEFT_ARROW:
       player.turnOffset += 1;
-      break;
-    default:
       break;
   }
 }
