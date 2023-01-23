@@ -15,6 +15,10 @@ let SHOW_INDICES = false;
 let SHOW_COORDS = false;
 let SHOW_GRID = false;
 
+function pixels2index(p) {
+  return Math.floor(p / TILE_SIZE);
+}
+
 class Map {
   constructor() {
     this.grid = [
@@ -30,6 +34,16 @@ class Map {
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
+  }
+
+  hasWallAt(x, y) {
+    return (
+      x < 0 ||
+      x > WINDOW_WIDTH ||
+      y < 0 ||
+      y > WINDOW_HEIGHT ||
+      !!grid.grid[pixels2index(y)][pixels2index(x)]
+    );
   }
 
   draw() {
@@ -59,10 +73,6 @@ class Map {
   }
 }
 
-function pixels2index(p) {
-  return Math.round((p - HALF_TILE) / TILE_SIZE);
-}
-
 class Player {
   constructor() {
     this.x = WINDOW_WIDTH / 2;
@@ -82,7 +92,7 @@ class Player {
     const x = this.x + Math.cos(this.angle) * step;
     const y = this.y + Math.sin(this.angle) * step;
 
-    if (!grid.grid[pixels2index(y)][pixels2index(x)]) {
+    if (!grid.hasWallAt(x, y)) {
       this.x = x;
       this.y = y;
     }
