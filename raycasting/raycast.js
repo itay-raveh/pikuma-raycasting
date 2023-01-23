@@ -50,12 +50,16 @@ class Player {
     this.turnOffset = 0;
     this.walkOffset = 0;
     this.angle = Math.PI / 2;
-    this.moveSpeed = 2.0;
+    this.moveSpeed = 3;
     this.rotationSpeed = 2 * (Math.PI / 180);
   }
 
   update() {
-    // TODO
+    const step = this.walkOffset * this.moveSpeed;
+    this.x += Math.cos(this.angle) * step;
+    this.y += Math.sin(this.angle) * step;
+
+    this.angle += this.turnOffset * this.rotationSpeed;
   }
 
   draw() {
@@ -74,6 +78,44 @@ class Player {
 
 const grid = new Map();
 const player = new Player();
+
+function keyPressed() {
+  switch (keyCode) {
+    case UP_ARROW:
+      player.walkOffset += 1;
+      break;
+    case DOWN_ARROW:
+      player.walkOffset -= 1;
+      break;
+    case RIGHT_ARROW:
+      player.turnOffset += 1;
+      break;
+    case LEFT_ARROW:
+      player.turnOffset -= 1;
+      break;
+    default:
+      break;
+  }
+}
+
+function keyReleased() {
+  switch (keyCode) {
+    case UP_ARROW:
+      player.walkOffset -= 1;
+      break;
+    case DOWN_ARROW:
+      player.walkOffset += 1;
+      break;
+    case RIGHT_ARROW:
+      player.turnOffset -= 1;
+      break;
+    case LEFT_ARROW:
+      player.turnOffset += 1;
+      break;
+    default:
+      break;
+  }
+}
 
 function setup() {
   createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
