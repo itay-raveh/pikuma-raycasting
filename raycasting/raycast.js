@@ -168,8 +168,6 @@ class Ray {
     let nextX = xintercept;
     let nextY = yintercept;
 
-    if (!this.isFacingDown) nextY--;
-
     let foundHor = false;
     let horX = 0;
     let horY = 0;
@@ -179,7 +177,7 @@ class Ray {
       nextY >= 0 &&
       nextY <= WINDOW_HEIGHT
     ) {
-      if (grid.hasWallAt(nextX, nextY)) {
+      if (grid.hasWallAt(nextX, nextY - (this.isFacingDown ? 0 : 1))) {
         foundHor = true;
         horX = nextX;
         horY = nextY;
@@ -202,8 +200,6 @@ class Ray {
     nextX = xintercept;
     nextY = yintercept;
 
-    if (!this.isFacingRight) nextX--;
-
     let foundVer = false;
     let verX = 0;
     let verY = 0;
@@ -213,7 +209,7 @@ class Ray {
       nextY >= 0 &&
       nextY <= WINDOW_HEIGHT
     ) {
-      if (grid.hasWallAt(nextX, nextY)) {
+      if (grid.hasWallAt(nextX - (this.isFacingRight ? 0 : 1), nextY)) {
         foundVer = true;
         verX = nextX;
         verY = nextY;
