@@ -1,3 +1,5 @@
+const RAD = Math.PI / 180;
+
 const TILE_SIZE = 50;
 const HALF_TILE = TILE_SIZE / 2;
 const QUARTER_TILE = HALF_TILE / 2;
@@ -8,13 +10,16 @@ const MAP_NUM_COLS = 15;
 const WINDOW_WIDTH = MAP_NUM_COLS * TILE_SIZE;
 const WINDOW_HEIGHT = MAP_NUM_ROWS * TILE_SIZE;
 
-const RAY_LEN = 50;
+const FOV = 60 * RAD;
+const RAY_LEN = TILE_SIZE;
+const RAY_WIDTH = 10;
+const RAY_COUNT = WINDOW_WIDTH / RAY_WIDTH;
 
 const DARK = "#222";
 const LIGHT = "#fff";
 
-let SHOW_INDICES = true;
-let SHOW_COORDS = true;
+let SHOW_INDICES = false;
+let SHOW_COORDS = false;
 let SHOW_GRID = false;
 
 function pixels2index(p) {
@@ -84,9 +89,9 @@ class Player {
 
     this.turnOffset = 0;
     this.walkOffset = 0;
-    this.angle = Math.PI / 2;
+    this.angle = 90 * RAD;
     this.moveSpeed = 3;
-    this.rotationSpeed = 3 * (Math.PI / 180);
+    this.rotationSpeed = 3 * RAD;
   }
 
   update() {
@@ -108,14 +113,6 @@ class Player {
     fill("red");
     circle(this.x, this.y, this.radius);
 
-    stroke("red");
-    line(
-      this.x,
-      this.y,
-      this.x + Math.cos(this.angle) * RAY_LEN,
-      this.y + Math.sin(this.angle) * RAY_LEN
-    );
-
     if (SHOW_INDICES || SHOW_COORDS) {
       if (SHOW_INDICES)
         text(
@@ -134,8 +131,24 @@ class Player {
   }
 }
 
+class Ray {
+  constructor(angle) {
+    this.angle = angle;
+  }
+  draw() {
+    stroke("rgba(255,0, 0, 0.3)");
+    line(
+      player.x,
+      player.y,
+      player.x + Math.cos(this.angle) * RAY_LEN,
+      player.y + Math.sin(this.angle) * RAY_LEN
+    );
+  }
+}
+
 const grid = new Map();
 const player = new Player();
+let rays = [];
 
 function keyPressed() {
   switch (keyCode) {
@@ -188,6 +201,20 @@ function keyReleased() {
   }
 }
 
+function castAllRays() {
+  let col = 0;
+  let angle = player.angle - FOV / 2;
+
+  rays = [];
+
+  for (let i = 0; i < RAY_COUNT; i++) {
+    const ray = new Ray(angle);
+    rays.push(ray);
+    angle += FOV / RAY_COUNT;
+    col++;
+  }
+}
+
 function setup() {
   createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
   textAlign(CENTER, CENTER);
@@ -195,10 +222,12 @@ function setup() {
 
 function update() {
   player.update();
+  castAllRays();
 }
 
 function draw() {
   update();
   grid.draw();
+  for (const ray of rays) ray.draw();
   player.draw();
 }
