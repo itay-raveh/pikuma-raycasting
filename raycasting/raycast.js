@@ -1,5 +1,7 @@
 const TILE_SIZE = 50;
 const HALF_TILE = TILE_SIZE / 2;
+const QUARTER_TILE = HALF_TILE / 2;
+
 const MAP_NUM_ROWS = 11;
 const MAP_NUM_COLS = 15;
 
@@ -11,8 +13,8 @@ const RAY_LEN = 50;
 const DARK = "#222";
 const LIGHT = "#fff";
 
-let SHOW_INDICES = false;
-let SHOW_COORDS = false;
+let SHOW_INDICES = true;
+let SHOW_COORDS = true;
 let SHOW_GRID = false;
 
 function pixels2index(p) {
@@ -65,8 +67,9 @@ class Map {
           const tx = x + HALF_TILE;
           const ty = y + HALF_TILE;
 
-          if (SHOW_INDICES) text(`${j},${i}`, tx, ty);
-          if (SHOW_COORDS) text(`${x},${y}`, tx, ty);
+          if (SHOW_INDICES) text(`${j},${i}`, tx, ty + QUARTER_TILE);
+
+          if (SHOW_COORDS) text(`${x},${y}`, tx, ty - QUARTER_TILE);
         }
       }
     }
@@ -114,13 +117,19 @@ class Player {
     );
 
     if (SHOW_INDICES || SHOW_COORDS) {
-      const tx = this.x + HALF_TILE / 2;
-      const ty = this.y + HALF_TILE / 2;
-
       if (SHOW_INDICES)
-        text(`${pixels2index(this.y)},${pixels2index(this.x)}`, tx, ty);
+        text(
+          `${pixels2index(this.x)},${pixels2index(this.y)}`,
+          this.x,
+          this.y + QUARTER_TILE
+        );
+
       if (SHOW_COORDS)
-        text(`${Math.round(this.y)},${Math.round(this.x)}`, tx, ty);
+        text(
+          `${Math.round(this.x) - HALF_TILE},${Math.round(this.y) - HALF_TILE}`,
+          this.x,
+          this.y - QUARTER_TILE
+        );
     }
   }
 }
