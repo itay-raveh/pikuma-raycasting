@@ -12,7 +12,7 @@ const WINDOW_HEIGHT = MAP_NUM_ROWS * TILE_SIZE;
 
 const FOV = 60 * RAD;
 const RAY_LEN = TILE_SIZE;
-const RAY_WIDTH = 10;
+const RAY_WIDTH = 1;
 const RAY_COUNT = WINDOW_WIDTH / RAY_WIDTH;
 
 const DARK = "#222";
@@ -131,18 +131,116 @@ class Player {
   }
 }
 
+function normalizeAngle(angle) {
+  angle = angle % (2 * Math.PI);
+  if (angle < 0) {
+    angle += 2 * Math.PI;
+  }
+  return angle;
+}
+
 class Ray {
   constructor(angle) {
-    this.angle = angle;
+    this.angle = normalizeAngle(angle);
+
+    this.hitX = 0;
+    this.hitY = 0;
+    this.distance = 0;
+    this.isHitVer = false;
+
+    this.isFacingDown = this.angle > 0 && this.angle < Math.PI;
+    this.isFacingRight =
+      this.angle > 1.5 * Math.PI || this.angle < 0.5 * Math.PI;
   }
+
+  cast(col) {
+    let xintercept, yintercept, xstep, ystep;
+
+    yintercept = Math.floor(player.y / TILE_SIZE) * TILE_SIZE;
+    yintercept += this.isFacingDown ? TILE_SIZE : 0;
+    xintercept = player.x + (yintercept - player.y) / Math.tan(this.angle);
+    ystep = TILE_SIZE;
+    ystep *= this.isFacingDown ? 1 : -1;
+    xstep = TILE_SIZE / Math.tan(this.angle);
+    xstep *= !this.isFacingRight && xstep > 0 ? -1 : 1;
+    xstep *= this.isFacingRight && xstep < 0 ? -1 : 1;
+
+    let nextX = xintercept;
+    let nextY = yintercept;
+
+    if (!this.isFacingDown) nextY--;
+
+    let foundHor = false;
+    let horX = 0;
+    let horY = 0;
+    while (
+      nextX >= 0 &&
+      nextX <= WINDOW_WIDTH &&
+      nextY >= 0 &&
+      nextY <= WINDOW_HEIGHT
+    ) {
+      if (grid.hasWallAt(nextX, nextY)) {
+        foundHor = true;
+        horX = nextX;
+        horY = nextY;
+        break;
+      }
+
+      nextX += xstep;
+      nextY += ystep;
+    }
+
+    xintercept = Math.floor(player.x / TILE_SIZE) * TILE_SIZE;
+    xintercept += this.isFacingRight ? TILE_SIZE : 0;
+    yintercept = player.y + (xintercept - player.x) * Math.tan(this.angle);
+    xstep = TILE_SIZE;
+    xstep *= this.isFacingRight ? 1 : -1;
+    ystep = TILE_SIZE * Math.tan(this.angle);
+    ystep *= !this.isFacingDown && ystep > 0 ? -1 : 1;
+    ystep *= this.isFacingDown && ystep < 0 ? -1 : 1;
+
+    nextX = xintercept;
+    nextY = yintercept;
+
+    if (!this.isFacingRight) nextX--;
+
+    let foundVer = false;
+    let verX = 0;
+    let verY = 0;
+    while (
+      nextX >= 0 &&
+      nextX <= WINDOW_WIDTH &&
+      nextY >= 0 &&
+      nextY <= WINDOW_HEIGHT
+    ) {
+      if (grid.hasWallAt(nextX, nextY)) {
+        foundVer = true;
+        verX = nextX;
+        verY = nextY;
+        break;
+      }
+
+      nextX += xstep;
+      nextY += ystep;
+    }
+
+    const horDist = !foundHor
+      ? Number.MAX_VALUE
+      : dist(player.x, player.y, horX, horY);
+
+    const verDist = !foundVer
+      ? Number.MAX_VALUE
+      : dist(player.x, player.y, verX, verY);
+
+    this.hitX = horDist < verDist ? horX : verX;
+    this.hitY = horDist < verDist ? horY : verY;
+    this.distance = Math.min(horDist, verDist);
+    this.isHitVer = verDist < horDist;
+  }
+
   draw() {
     stroke("rgba(255,0, 0, 0.3)");
-    line(
-      player.x,
-      player.y,
-      player.x + Math.cos(this.angle) * RAY_LEN,
-      player.y + Math.sin(this.angle) * RAY_LEN
-    );
+    line(player.x, player.y, this.hitX, this.hitY);
   }
 }
 
@@ -202,16 +300,15 @@ function keyReleased() {
 }
 
 function castAllRays() {
-  let col = 0;
   let angle = player.angle - FOV / 2;
 
   rays = [];
 
   for (let i = 0; i < RAY_COUNT; i++) {
     const ray = new Ray(angle);
+    ray.cast(i);
     rays.push(ray);
     angle += FOV / RAY_COUNT;
-    col++;
   }
 }
 
