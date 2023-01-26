@@ -83,7 +83,7 @@ class Player {
     this.walkOffset = 0;
     this.angle = 90 * RAD;
     this.moveSpeed = 3;
-    this.rotationSpeed = 3 * RAD;
+    this.rotationSpeed = 2 * RAD;
   }
 
   update() {
@@ -282,7 +282,8 @@ function drawWalls() {
     const distance = ray.distance * Math.cos(ray.angle - player.angle);
     const wallStripHeight = (TILE_SIZE / distance) * DISTANCE_TO_PROJECTION;
 
-    fill("white");
+    const b = Math.round(255 - (distance * 150) / DISTANCE_TO_PROJECTION);
+    fill(`rgb(${b},${b},${b})`);
     noStroke();
     rect(
       i * RAY_WIDTH,
