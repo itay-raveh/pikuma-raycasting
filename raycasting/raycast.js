@@ -279,7 +279,7 @@ function castAllRays() {
 function drawWalls() {
   for (const i in rays) {
     const ray = rays[i];
-    const distance = ray.distance;
+    const distance = ray.distance * Math.cos(ray.angle - player.angle);
     const wallStripHeight = (TILE_SIZE / distance) * DISTANCE_TO_PROJECTION;
 
     fill("white");
