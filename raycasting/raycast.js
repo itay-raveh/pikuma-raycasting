@@ -20,10 +20,6 @@ const MINIMAP_SCALE = 0.2;
 const DARK = "#222";
 const LIGHT = "#fff";
 
-let SHOW_INDICES = false;
-let SHOW_COORDS = false;
-let SHOW_GRID = false;
-
 function pixels2index(p) {
   return Math.floor(p / TILE_SIZE);
 }
@@ -61,8 +57,7 @@ class Map {
         const x = j * TILE_SIZE;
         const y = i * TILE_SIZE;
 
-        if (SHOW_GRID) stroke(DARK);
-        else noStroke();
+        stroke(DARK);
 
         fill(this.grid[i][j] ? DARK : LIGHT);
         rect(
@@ -110,15 +105,7 @@ class Player {
       MINIMAP_SCALE * this.x,
       MINIMAP_SCALE * this.y,
       MINIMAP_SCALE * this.radius
-        );
-
-      if (SHOW_COORDS)
-        text(
-          `${Math.round(this.x) - HALF_TILE},${Math.round(this.y) - HALF_TILE}`,
-          this.x,
-          this.y - QUARTER_TILE
-        );
-    }
+    );
   }
 }
 
@@ -253,23 +240,6 @@ function keyPressed() {
       break;
     case LEFT_ARROW:
       player.turnOffset -= 1;
-      break;
-  }
-}
-
-function keyTyped() {
-  switch (key) {
-    case "g":
-    case "G":
-      SHOW_GRID = !SHOW_GRID;
-      break;
-    case "i":
-    case "I":
-      SHOW_INDICES = !SHOW_INDICES;
-      break;
-    case "c":
-    case "C":
-      SHOW_COORDS = !SHOW_COORDS;
       break;
   }
 }
