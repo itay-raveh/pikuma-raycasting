@@ -1,6 +1,6 @@
 const RAD = Math.PI / 180;
 
-const TILE_SIZE = 50;
+const TILE_SIZE = 60;
 const HALF_TILE = TILE_SIZE / 2;
 const QUARTER_TILE = HALF_TILE / 2;
 
@@ -14,6 +14,8 @@ const FOV = 60 * RAD;
 const RAY_LEN = TILE_SIZE;
 const RAY_WIDTH = 1;
 const RAY_COUNT = WINDOW_WIDTH / RAY_WIDTH;
+
+const DISTANCE_TO_PROJECTION = WINDOW_WIDTH / 2 / Math.tan(FOV / 2);
 
 const MINIMAP_SCALE = 0.2;
 
@@ -274,6 +276,23 @@ function castAllRays() {
   }
 }
 
+function drawWalls() {
+  for (const i in rays) {
+    const ray = rays[i];
+    const distance = ray.distance;
+    const wallStripHeight = (TILE_SIZE / distance) * DISTANCE_TO_PROJECTION;
+
+    fill("white");
+    noStroke();
+    rect(
+      i * RAY_WIDTH,
+      WINDOW_HEIGHT / 2 - wallStripHeight / 2,
+      RAY_WIDTH,
+      wallStripHeight
+    );
+  }
+}
+
 function setup() {
   createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
   textAlign(CENTER, CENTER);
@@ -286,6 +305,12 @@ function update() {
 
 function draw() {
   update();
+
+  clear(DARK);
+
+  drawWalls();
+
+  // minimap
   grid.draw();
   for (const ray of rays) ray.draw();
   player.draw();
