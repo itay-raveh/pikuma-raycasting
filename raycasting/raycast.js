@@ -319,6 +319,9 @@ function draw() {
 
   clear(DARK);
 
+  fill(LIGHT);
+  rect(0, WINDOW_HEIGHT / 2, WINDOW_WIDTH, WINDOW_HEIGHT / 2);
+
   drawWalls();
 
   // minimap
