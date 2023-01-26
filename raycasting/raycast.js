@@ -285,7 +285,15 @@ function drawWalls() {
     const b = Math.round(
       255 - (distance * 150) / DISTANCE_TO_PROJECTION + (ray.isHitVer ? 50 : 0)
     );
-    fill(`rgb(${b},${b},${b})`);
+    fill("black");
+    rect(
+      i * RAY_WIDTH,
+      WINDOW_HEIGHT / 2 - wallStripHeight / 2 - 1,
+      RAY_WIDTH,
+      wallStripHeight + 2
+    );
+    if (i > 0 && ray.isHitVer !== rays[i - 1].isHitVer) fill("black");
+    else fill(`rgb(${b},${b},${b})`);
     noStroke();
     rect(
       i * RAY_WIDTH,
