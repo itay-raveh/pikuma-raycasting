@@ -282,7 +282,9 @@ function drawWalls() {
     const distance = ray.distance * Math.cos(ray.angle - player.angle);
     const wallStripHeight = (TILE_SIZE / distance) * DISTANCE_TO_PROJECTION;
 
-    const b = Math.round(255 - (distance * 150) / DISTANCE_TO_PROJECTION);
+    const b = Math.round(
+      255 - (distance * 150) / DISTANCE_TO_PROJECTION + (ray.isHitVer ? 50 : 0)
+    );
     fill(`rgb(${b},${b},${b})`);
     noStroke();
     rect(
