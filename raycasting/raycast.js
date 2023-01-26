@@ -15,6 +15,8 @@ const RAY_LEN = TILE_SIZE;
 const RAY_WIDTH = 1;
 const RAY_COUNT = WINDOW_WIDTH / RAY_WIDTH;
 
+const MINIMAP_SCALE = 0.2;
+
 const DARK = "#222";
 const LIGHT = "#fff";
 
@@ -63,19 +65,12 @@ class Map {
         else noStroke();
 
         fill(this.grid[i][j] ? DARK : LIGHT);
-        rect(x, y, TILE_SIZE, TILE_SIZE);
-
-        if (SHOW_INDICES || SHOW_COORDS) {
-          noStroke();
-          fill("grey");
-
-          const tx = x + HALF_TILE;
-          const ty = y + HALF_TILE;
-
-          if (SHOW_INDICES) text(`${j},${i}`, tx, ty + QUARTER_TILE);
-
-          if (SHOW_COORDS) text(`${x},${y}`, tx, ty - QUARTER_TILE);
-        }
+        rect(
+          MINIMAP_SCALE * x,
+          MINIMAP_SCALE * y,
+          MINIMAP_SCALE * TILE_SIZE,
+          MINIMAP_SCALE * TILE_SIZE
+        );
       }
     }
   }
@@ -111,14 +106,10 @@ class Player {
   draw() {
     noStroke();
     fill("red");
-    circle(this.x, this.y, this.radius);
-
-    if (SHOW_INDICES || SHOW_COORDS) {
-      if (SHOW_INDICES)
-        text(
-          `${pixels2index(this.x)},${pixels2index(this.y)}`,
-          this.x,
-          this.y + QUARTER_TILE
+    circle(
+      MINIMAP_SCALE * this.x,
+      MINIMAP_SCALE * this.y,
+      MINIMAP_SCALE * this.radius
         );
 
       if (SHOW_COORDS)
@@ -235,8 +226,13 @@ class Ray {
   }
 
   draw() {
-    stroke("rgba(255,0, 0, 0.3)");
-    line(player.x, player.y, this.hitX, this.hitY);
+    stroke("red");
+    line(
+      MINIMAP_SCALE * player.x,
+      MINIMAP_SCALE * player.y,
+      MINIMAP_SCALE * this.hitX,
+      MINIMAP_SCALE * this.hitY
+    );
   }
 }
 
