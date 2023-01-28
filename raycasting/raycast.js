@@ -334,6 +334,12 @@ function draw() {
 
   drawWalls();
 
+  fill("black");
+  rectMode(CENTER);
+  rect(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 1, 10);
+  rect(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 10, 1);
+  rectMode(CORNER);
+
   // minimap
   grid.draw();
   for (const ray of rays) ray.draw();
