@@ -79,17 +79,26 @@ class Player {
     this.y = WINDOW_HEIGHT / 2;
     this.radius = 5;
 
-    this.walkOffset = 0;
+    this.forwardWalkOffset = 0;
+    this.sidewardWalkOffset = 0;
     this.angle = 90 * RAD;
     this.moveSpeed = 3;
-    this.rotationSpeed = 8;
+    this.rotationSpeed = 10;
   }
 
   update() {
-    const step = this.walkOffset * this.moveSpeed;
-
-    const x = this.x + Math.cos(this.angle) * step;
-    const y = this.y + Math.sin(this.angle) * step;
+    const x =
+      this.x +
+      Math.cos(this.angle) * this.forwardWalkOffset * this.moveSpeed +
+      Math.cos(Math.PI / 2 - this.angle) *
+        this.sidewardWalkOffset *
+        this.moveSpeed;
+    const y =
+      this.y +
+      Math.sin(this.angle) * this.forwardWalkOffset * this.moveSpeed +
+      Math.sin(Math.PI / 2 - this.angle) *
+        this.sidewardWalkOffset *
+        this.moveSpeed;
 
     if (!grid.hasWallAt(x, y)) {
       this.x = x;
@@ -227,36 +236,36 @@ const player = new Player();
 let rays = [];
 
 function keyPressed() {
-  switch (keyCode) {
-    case UP_ARROW:
-      player.walkOffset += 1;
+  switch (key) {
+    case "w":
+      player.forwardWalkOffset += 1;
       break;
-    case DOWN_ARROW:
-      player.walkOffset -= 1;
+    case "s":
+      player.forwardWalkOffset -= 1;
       break;
-    // case RIGHT_ARROW:
-    //   player.turnOffset += 1;
-    //   break;
-    // case LEFT_ARROW:
-    //   player.turnOffset -= 1;
-    //   break;
+    case "a":
+      player.sidewardWalkOffset += 1;
+      break;
+    case "d":
+      player.sidewardWalkOffset -= 1;
+      break;
   }
 }
 
 function keyReleased() {
-  switch (keyCode) {
-    case UP_ARROW:
-      player.walkOffset -= 1;
+  switch (key) {
+    case "w":
+      player.forwardWalkOffset -= 1;
       break;
-    case DOWN_ARROW:
-      player.walkOffset += 1;
+    case "s":
+      player.forwardWalkOffset += 1;
       break;
-    // case RIGHT_ARROW:
-    //   player.turnOffset -= 1;
-    //   break;
-    // case LEFT_ARROW:
-    //   player.turnOffset += 1;
-    //   break;
+    case "a":
+      player.sidewardWalkOffset -= 1;
+      break;
+    case "d":
+      player.sidewardWalkOffset += 1;
+      break;
   }
 }
 
