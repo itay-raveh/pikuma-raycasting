@@ -79,11 +79,10 @@ class Player {
     this.y = WINDOW_HEIGHT / 2;
     this.radius = 5;
 
-    this.turnOffset = 0;
     this.walkOffset = 0;
     this.angle = 90 * RAD;
     this.moveSpeed = 3;
-    this.rotationSpeed = 2 * RAD;
+    this.rotationSpeed = 8;
   }
 
   update() {
@@ -96,8 +95,6 @@ class Player {
       this.x = x;
       this.y = y;
     }
-
-    this.angle += this.turnOffset * this.rotationSpeed;
   }
 
   draw() {
@@ -237,12 +234,12 @@ function keyPressed() {
     case DOWN_ARROW:
       player.walkOffset -= 1;
       break;
-    case RIGHT_ARROW:
-      player.turnOffset += 1;
-      break;
-    case LEFT_ARROW:
-      player.turnOffset -= 1;
-      break;
+    // case RIGHT_ARROW:
+    //   player.turnOffset += 1;
+    //   break;
+    // case LEFT_ARROW:
+    //   player.turnOffset -= 1;
+    //   break;
   }
 }
 
@@ -254,13 +251,17 @@ function keyReleased() {
     case DOWN_ARROW:
       player.walkOffset += 1;
       break;
-    case RIGHT_ARROW:
-      player.turnOffset -= 1;
-      break;
-    case LEFT_ARROW:
-      player.turnOffset += 1;
-      break;
+    // case RIGHT_ARROW:
+    //   player.turnOffset -= 1;
+    //   break;
+    // case LEFT_ARROW:
+    //   player.turnOffset += 1;
+    //   break;
   }
+}
+
+function mouseMoved() {
+  player.angle = (winMouseX * player.rotationSpeed) / windowWidth;
 }
 
 function castAllRays() {
