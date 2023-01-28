@@ -270,8 +270,14 @@ function keyReleased() {
 }
 
 function mouseMoved() {
-  player.angle +=
-    ((winMouseX - pwinMouseX) * player.rotationSpeed) / windowWidth;
+  if (
+    mouseY > 0 &&
+    mouseY < WINDOW_HEIGHT &&
+    mouseX > 0 &&
+    mouseX < WINDOW_WIDTH
+  )
+    player.angle +=
+      ((winMouseX - pwinMouseX) * player.rotationSpeed) / windowWidth;
 }
 
 function castAllRays() {
