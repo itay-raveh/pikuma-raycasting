@@ -40,3 +40,7 @@ button:hover {
   justify-content: space-evenly;
   margin: 1rem;
 }
+
+canvas {
+  cursor: none;
+}
