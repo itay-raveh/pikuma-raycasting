@@ -80,25 +80,25 @@ class Player {
     this.radius = 5;
 
     this.forwardWalkOffset = 0;
-    this.sidewardWalkOffset = 0;
+    this.leftwardWalkOffset = 0;
     this.angle = 90 * RAD;
     this.moveSpeed = 3;
     this.rotationSpeed = 10;
   }
 
   update() {
+    const forwardStep = this.forwardWalkOffset * this.moveSpeed;
+    const leftStep = this.leftwardWalkOffset * this.moveSpeed;
+    const tangentAngle = this.angle - radians(90);
+
     const x =
       this.x +
-      Math.cos(this.angle) * this.forwardWalkOffset * this.moveSpeed +
-      Math.cos(Math.PI / 2 - this.angle) *
-        this.sidewardWalkOffset *
-        this.moveSpeed;
+      Math.cos(this.angle) * forwardStep +
+      Math.cos(tangentAngle) * leftStep;
     const y =
       this.y +
-      Math.sin(this.angle) * this.forwardWalkOffset * this.moveSpeed +
-      Math.sin(Math.PI / 2 - this.angle) *
-        this.sidewardWalkOffset *
-        this.moveSpeed;
+      Math.sin(this.angle) * forwardStep +
+      Math.sin(tangentAngle) * leftStep;
 
     if (!grid.hasWallAt(x, y)) {
       this.x = x;
@@ -244,10 +244,10 @@ function keyPressed() {
       player.forwardWalkOffset -= 1;
       break;
     case "a":
-      player.sidewardWalkOffset += 1;
+      player.leftwardWalkOffset += 1;
       break;
     case "d":
-      player.sidewardWalkOffset -= 1;
+      player.leftwardWalkOffset -= 1;
       break;
   }
 }
@@ -261,16 +261,17 @@ function keyReleased() {
       player.forwardWalkOffset += 1;
       break;
     case "a":
-      player.sidewardWalkOffset -= 1;
+      player.leftwardWalkOffset -= 1;
       break;
     case "d":
-      player.sidewardWalkOffset += 1;
+      player.leftwardWalkOffset += 1;
       break;
   }
 }
 
 function mouseMoved() {
-  player.angle = (winMouseX * player.rotationSpeed) / windowWidth;
+  player.angle +=
+    ((winMouseX - pwinMouseX) * player.rotationSpeed) / windowWidth;
 }
 
 function castAllRays() {
