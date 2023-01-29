@@ -139,7 +139,7 @@ class Ray {
       this.angle > 1.5 * Math.PI || this.angle < 0.5 * Math.PI;
   }
 
-  cast(col) {
+  cast() {
     let xintercept, yintercept, xstep, ystep;
 
     yintercept = Math.floor(player.y / TILE_SIZE) * TILE_SIZE;
@@ -286,7 +286,7 @@ function castAllRays() {
 
   for (let i = 0; i < RAY_COUNT; i++) {
     const ray = new Ray(angle);
-    ray.cast(i);
+    ray.cast();
     rays.push(ray);
     angle += FOV / RAY_COUNT;
   }
