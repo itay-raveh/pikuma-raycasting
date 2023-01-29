@@ -276,8 +276,7 @@ function mouseMoved() {
     mouseX > 0 &&
     mouseX < WINDOW_WIDTH
   )
-    player.angle +=
-      ((winMouseX - pwinMouseX) * player.rotationSpeed) / windowWidth;
+    player.angle += ((mouseX - pmouseX) * player.rotationSpeed) / windowWidth;
 }
 
 function castAllRays() {
