@@ -1,0 +1,13 @@
+{
+  "name": "Alpine",
+  "image": "mcr.microsoft.com/devcontainers/base:alpine-3.17",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "samplavigne.p5-vscode",
+        "esbenp.prettier-vscode",
+        "seatonjiang.gitmoji-vscode"
+      ]
+    }
+  }
+}
