@@ -127,8 +127,7 @@ class Ray {
   constructor(angle) {
     this.angle = normalizeAngle(angle);
 
-    this.hitX = 0;
-    this.hitY = 0;
+    this.hit = createVector(0, 0);
     this.distance = 0;
     this.isHitVer = false;
 
@@ -233,8 +232,8 @@ class Ray {
     line(
       MINIMAP_SCALE * player.position.x,
       MINIMAP_SCALE * player.position.y,
-      MINIMAP_SCALE * this.hitX,
-      MINIMAP_SCALE * this.hitY
+      MINIMAP_SCALE * this.hit.x,
+      MINIMAP_SCALE * this.hit.y
     );
   }
 }
