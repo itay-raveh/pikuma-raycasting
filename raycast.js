@@ -101,7 +101,7 @@ class Player {
       Math.cos(this.angle) * forwardStep + Math.cos(tangentAngle) * leftStep,
       Math.sin(this.angle) * forwardStep + Math.sin(tangentAngle) * leftStep
     );
-    const position = this.position.add(move);
+    const position = p5.Vector.add(this.position, move);
 
     if (!grid.hasWallAt(position)) this.position = position;
   }
