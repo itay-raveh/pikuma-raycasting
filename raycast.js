@@ -137,92 +137,82 @@ class Ray {
   }
 
   cast() {
-    let xintercept, yintercept, xstep, ystep;
+    const intercept = createVector(0, 0);
+    const step = createVector(0, 0);
 
-    yintercept = Math.floor(player.position.y / TILE_SIZE) * TILE_SIZE;
-    yintercept += this.isFacingDown ? TILE_SIZE : 0;
-    xintercept =
+    intercept.y = Math.floor(player.position.y / TILE_SIZE) * TILE_SIZE;
+    intercept.y += this.isFacingDown ? TILE_SIZE : 0;
+    intercept.x =
       player.position.x +
-      (yintercept - player.position.y) / Math.tan(this.angle);
-    ystep = TILE_SIZE;
-    ystep *= this.isFacingDown ? 1 : -1;
-    xstep = TILE_SIZE / Math.tan(this.angle);
-    xstep *= !this.isFacingRight && xstep > 0 ? -1 : 1;
-    xstep *= this.isFacingRight && xstep < 0 ? -1 : 1;
+      (intercept.y - player.position.y) / Math.tan(this.angle);
+    step.y = TILE_SIZE;
+    step.y *= this.isFacingDown ? 1 : -1;
+    step.x = TILE_SIZE / Math.tan(this.angle);
+    step.x *= !this.isFacingRight && step.x > 0 ? -1 : 1;
+    step.x *= this.isFacingRight && step.x < 0 ? -1 : 1;
 
-    let nextX = xintercept;
-    let nextY = yintercept;
+    const next = intercept.copy();
 
     let foundHor = false;
-    let horX = 0;
-    let horY = 0;
+    const hor = createVector(0, 0);
     while (
-      nextX >= 0 &&
-      nextX <= WINDOW_WIDTH &&
-      nextY >= 0 &&
-      nextY <= WINDOW_HEIGHT
-    ) {
-      if (
-        grid.hasWallAt(createVector(nextX, nextY - (this.isFacingDown ? 0 : 1)))
-      ) {
-        foundHor = true;
-        horX = nextX;
-        horY = nextY;
-        break;
-      }
-
-      nextX += xstep;
-      nextY += ystep;
-    }
-
-    xintercept = Math.floor(player.position.x / TILE_SIZE) * TILE_SIZE;
-    xintercept += this.isFacingRight ? TILE_SIZE : 0;
-    yintercept =
-      player.position.y +
-      (xintercept - player.position.x) * Math.tan(this.angle);
-    xstep = TILE_SIZE;
-    xstep *= this.isFacingRight ? 1 : -1;
-    ystep = TILE_SIZE * Math.tan(this.angle);
-    ystep *= !this.isFacingDown && ystep > 0 ? -1 : 1;
-    ystep *= this.isFacingDown && ystep < 0 ? -1 : 1;
-
-    nextX = xintercept;
-    nextY = yintercept;
-
-    let foundVer = false;
-    let verX = 0;
-    let verY = 0;
-    while (
-      nextX >= 0 &&
-      nextX <= WINDOW_WIDTH &&
-      nextY >= 0 &&
-      nextY <= WINDOW_HEIGHT
+      next.x >= 0 &&
+      next.x <= WINDOW_WIDTH &&
+      next.y >= 0 &&
+      next.y <= WINDOW_HEIGHT
     ) {
       if (
         grid.hasWallAt(
-          createVector(nextX - (this.isFacingRight ? 0 : 1), nextY)
+          createVector(next.x, next.y - (this.isFacingDown ? 0 : 1))
         )
       ) {
-        foundVer = true;
-        verX = nextX;
-        verY = nextY;
+        foundHor = true;
+        hor.set(next);
         break;
       }
 
-      nextX += xstep;
-      nextY += ystep;
+      next.add(step);
     }
 
-    const horDist = !foundHor
-      ? Number.MAX_VALUE
-      : dist(player.position.x, player.position.y, horX, horY);
+    intercept.x = Math.floor(player.position.x / TILE_SIZE) * TILE_SIZE;
+    intercept.x += this.isFacingRight ? TILE_SIZE : 0;
+    intercept.y =
+      player.position.y +
+      (intercept.x - player.position.x) * Math.tan(this.angle);
+    step.x = TILE_SIZE;
+    step.x *= this.isFacingRight ? 1 : -1;
+    step.y = TILE_SIZE * Math.tan(this.angle);
+    step.y *= !this.isFacingDown && step.y > 0 ? -1 : 1;
+    step.y *= this.isFacingDown && step.y < 0 ? -1 : 1;
 
-    const verDist = !foundVer
-      ? Number.MAX_VALUE
-      : dist(player.position.x, player.position.y, verX, verY);
+    next.set(intercept);
 
-    this.hitX = horDist < verDist ? horX : verX;
-    this.hitY = horDist < verDist ? horY : verY;
+    let foundVer = false;
+    const ver = createVector(0, 0);
+    while (
+      next.x >= 0 &&
+      next.x <= WINDOW_WIDTH &&
+      next.y >= 0 &&
+      next.y <= WINDOW_HEIGHT
+    ) {
+      if (
+        grid.hasWallAt(
+          createVector(next.x - (this.isFacingRight ? 0 : 1), next.y)
+        )
+      ) {
+        foundVer = true;
+        ver.set(next);
+        break;
+      }
+
+      next.add(step);
+    }
+
+    const horDist = !foundHor ? Number.MAX_VALUE : player.position.dist(hor);
+
+    const verDist = !foundVer ? Number.MAX_VALUE : player.position.dist(ver);
+
+    this.hit = horDist < verDist ? hor : ver;
     this.distance = Math.min(horDist, verDist);
     this.isHitVer = verDist < horDist;
   }
