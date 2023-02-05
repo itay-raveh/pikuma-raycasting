@@ -6,7 +6,8 @@
       "extensions": [
         "samplavigne.p5-vscode",
         "esbenp.prettier-vscode",
-        "seatonjiang.gitmoji-vscode"
+        "seatonjiang.gitmoji-vscode",
+        "eamodio.gitlens"
       ]
     }
   }
