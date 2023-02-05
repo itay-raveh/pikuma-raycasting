@@ -83,23 +83,21 @@ class Grid {
 class Player {
   constructor() {
     this.position = createVector(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-    this.radius = 5;
+    this.positionOffset = createVector(0, 0);
 
-    this.forwardWalkOffset = 0;
-    this.leftwardWalkOffset = 0;
+    this.radius = 5;
     this.angle = 90 * RAD;
     this.moveSpeed = 3;
     this.rotationSpeed = 10;
   }
 
   update() {
-    const forwardStep = this.forwardWalkOffset * this.moveSpeed;
-    const leftStep = this.leftwardWalkOffset * this.moveSpeed;
+    const step = p5.Vector.mult(this.positionOffset, this.moveSpeed);
     const tangentAngle = this.angle - radians(90);
 
     const move = createVector(
-      Math.cos(this.angle) * forwardStep + Math.cos(tangentAngle) * leftStep,
-      Math.sin(this.angle) * forwardStep + Math.sin(tangentAngle) * leftStep
+      Math.cos(this.angle) * step.y + Math.cos(tangentAngle) * step.x,
+      Math.sin(this.angle) * step.y + Math.sin(tangentAngle) * step.x
     );
     const position = p5.Vector.add(this.position, move);
 
@@ -251,16 +249,16 @@ let rays = [];
 function keyPressed() {
   switch (key) {
     case "w":
-      player.forwardWalkOffset += 1;
+      player.positionOffset.y += 1;
       break;
     case "s":
-      player.forwardWalkOffset -= 1;
+      player.positionOffset.y -= 1;
       break;
     case "a":
-      player.leftwardWalkOffset += 1;
+      player.positionOffset.x += 1;
       break;
     case "d":
-      player.leftwardWalkOffset -= 1;
+      player.positionOffset.x -= 1;
       break;
   }
 }
@@ -268,16 +266,16 @@ function keyPressed() {
 function keyReleased() {
   switch (key) {
     case "w":
-      player.forwardWalkOffset -= 1;
+      player.positionOffset.y -= 1;
       break;
     case "s":
-      player.forwardWalkOffset += 1;
+      player.positionOffset.y += 1;
       break;
     case "a":
-      player.leftwardWalkOffset -= 1;
+      player.positionOffset.x -= 1;
       break;
     case "d":
-      player.leftwardWalkOffset += 1;
+      player.positionOffset.x += 1;
       break;
   }
 }
