@@ -3,8 +3,6 @@
 const RAD = Math.PI / 180;
 
 const TILE_SIZE = 60;
-const HALF_TILE = TILE_SIZE / 2;
-const QUARTER_TILE = HALF_TILE / 2;
 
 const MAP_NUM_ROWS = 11;
 const MAP_NUM_COLS = 15;
@@ -13,7 +11,6 @@ const WINDOW_WIDTH = MAP_NUM_COLS * TILE_SIZE;
 const WINDOW_HEIGHT = MAP_NUM_ROWS * TILE_SIZE;
 
 const FOV = 60 * RAD;
-const RAY_LEN = TILE_SIZE;
 const RAY_WIDTH = 1;
 const RAY_COUNT = WINDOW_WIDTH / RAY_WIDTH;
 
