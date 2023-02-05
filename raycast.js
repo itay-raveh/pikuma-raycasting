@@ -1,6 +1,7 @@
 /// <reference path="/home/vscode/.vscode-remote/extensions/samplavigne.p5-vscode-1.2.13/p5types/global.d.ts"/>
 
-const RAD = Math.PI / 180;
+// Load `p5` function to globa scope
+new p5();
 
 const TILE_SIZE = 60;
 
@@ -12,11 +13,14 @@ const WINDOW_HALF_WIDTH = WINDOW_WIDTH / 2;
 const WINDOW_HEIGHT = MAP_NUM_ROWS * TILE_SIZE;
 const WINDOW_HALF_HEIGHT = WINDOW_HEIGHT / 2;
 
-const FOV = 60 * RAD;
+const FOV = radians(60);
+const FOV_HALF = FOV / 2;
 const RAY_WIDTH = 1;
 const RAY_COUNT = WINDOW_WIDTH / RAY_WIDTH;
 
-const DISTANCE_TO_PROJECTION = WINDOW_HALF_WIDTH / Math.tan(FOV / 2);
+const DEG90 = radians(90);
+
+const DISTANCE_TO_PROJECTION = WINDOW_HALF_WIDTH / tan(FOV_HALF);
 
 const MINIMAP_SCALE = 0.2;
 
@@ -24,7 +28,7 @@ const DARK = "#222";
 const LIGHT = "#fff";
 
 function pixels2index(p) {
-  return Math.floor(p / TILE_SIZE);
+  return floor(p / TILE_SIZE);
 }
 
 function isInWindow(position) {
@@ -91,18 +95,18 @@ class Player {
     this.positionOffset = createVector(0, 0);
 
     this.radius = 5;
-    this.angle = 90 * RAD;
+    this.angle = DEG90;
     this.moveSpeed = 3;
     this.rotationSpeed = 10;
   }
 
   update() {
     const step = p5.Vector.mult(this.positionOffset, this.moveSpeed);
-    const tangentAngle = this.angle - radians(90);
+    const tangentAngle = this.angle - DEG90;
 
     const move = createVector(
-      Math.cos(this.angle) * step.y + Math.cos(tangentAngle) * step.x,
-      Math.sin(this.angle) * step.y + Math.sin(tangentAngle) * step.x
+      cos(this.angle) * step.y + cos(tangentAngle) * step.x,
+      sin(this.angle) * step.y + sin(tangentAngle) * step.x
     );
     const position = p5.Vector.add(this.position, move);
 
@@ -120,39 +124,29 @@ class Player {
   }
 }
 
-function normalizeAngle(angle) {
-  angle = angle % (2 * Math.PI);
-  if (angle < 0) {
-    angle += 2 * Math.PI;
-  }
-  return angle;
-}
-
 class Ray {
   constructor(angle) {
-    this.angle = normalizeAngle(angle);
+    this.angle = angle % (2 * PI);
 
     this.hit = createVector(0, 0);
     this.distance = 0;
     this.isHitVer = false;
 
-    this.isFacingDown = this.angle > 0 && this.angle < Math.PI;
-    this.isFacingRight =
-      this.angle > 1.5 * Math.PI || this.angle < 0.5 * Math.PI;
+    this.isFacingDown = this.angle > 0 && this.angle < PI;
+    this.isFacingRight = this.angle > 1.5 * PI || this.angle < 0.5 * PI;
   }
 
   cast() {
     const intercept = createVector(0, 0);
     const step = createVector(0, 0);
 
-    intercept.y = Math.floor(player.position.y / TILE_SIZE) * TILE_SIZE;
+    intercept.y = floor(player.position.y / TILE_SIZE) * TILE_SIZE;
     intercept.y += this.isFacingDown ? TILE_SIZE : 0;
     intercept.x =
-      player.position.x +
-      (intercept.y - player.position.y) / Math.tan(this.angle);
+      player.position.x + (intercept.y - player.position.y) / tan(this.angle);
     step.y = TILE_SIZE;
     step.y *= this.isFacingDown ? 1 : -1;
-    step.x = TILE_SIZE / Math.tan(this.angle);
+    step.x = TILE_SIZE / tan(this.angle);
     step.x *= !this.isFacingRight && step.x > 0 ? -1 : 1;
     step.x *= this.isFacingRight && step.x < 0 ? -1 : 1;
 
@@ -174,14 +168,13 @@ class Ray {
       next.add(step);
     }
 
-    intercept.x = Math.floor(player.position.x / TILE_SIZE) * TILE_SIZE;
+    intercept.x = floor(player.position.x / TILE_SIZE) * TILE_SIZE;
     intercept.x += this.isFacingRight ? TILE_SIZE : 0;
     intercept.y =
-      player.position.y +
-      (intercept.x - player.position.x) * Math.tan(this.angle);
+      player.position.y + (intercept.x - player.position.x) * tan(this.angle);
     step.x = TILE_SIZE;
     step.x *= this.isFacingRight ? 1 : -1;
-    step.y = TILE_SIZE * Math.tan(this.angle);
+    step.y = TILE_SIZE * tan(this.angle);
     step.y *= !this.isFacingDown && step.y > 0 ? -1 : 1;
     step.y *= this.isFacingDown && step.y < 0 ? -1 : 1;
 
@@ -208,7 +201,7 @@ class Ray {
     const verDist = !foundVer ? Number.MAX_VALUE : player.position.dist(ver);
 
     this.hit = horDist < verDist ? hor : ver;
-    this.distance = Math.min(horDist, verDist);
+    this.distance = min(horDist, verDist);
     this.isHitVer = verDist < horDist;
   }
 
@@ -223,10 +216,8 @@ class Ray {
   }
 }
 
-/** @type {Grid} */
-let grid;
-/** @type {Player} */
-let player;
+const grid = new Grid();
+const player = new Player();
 /** @type {Ray[]} */
 let rays = [];
 
@@ -275,7 +266,7 @@ function mouseMoved() {
 }
 
 function castAllRays() {
-  let angle = player.angle - FOV / 2;
+  let angle = player.angle - FOV_HALF;
 
   rays = [];
 
@@ -290,10 +281,10 @@ function castAllRays() {
 function drawWalls() {
   for (const i in rays) {
     const ray = rays[i];
-    const distance = ray.distance * Math.cos(ray.angle - player.angle);
+    const distance = ray.distance * cos(ray.angle - player.angle);
     const wallStripHeight = (TILE_SIZE / distance) * DISTANCE_TO_PROJECTION;
 
-    const b = Math.round(
+    const b = round(
       255 - (distance * 150) / DISTANCE_TO_PROJECTION + (ray.isHitVer ? 50 : 0)
     );
     fill("black");
@@ -318,8 +309,6 @@ function drawWalls() {
 function setup() {
   createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
   textAlign(CENTER, CENTER);
-  grid = new Grid();
-  player = new Player();
 }
 
 function update() {
