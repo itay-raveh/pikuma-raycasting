@@ -28,6 +28,15 @@ function pixels2index(p) {
   return Math.floor(p / TILE_SIZE);
 }
 
+function isInWindow(position) {
+  return (
+    position.x >= 0 &&
+    position.x <= WINDOW_WIDTH &&
+    position.y >= 0 &&
+    position.y <= WINDOW_HEIGHT
+  );
+}
+
 class Grid {
   constructor() {
     this.grid = [
@@ -52,10 +61,7 @@ class Grid {
    */
   hasWallAt(position) {
     return (
-      position.x < 0 ||
-      position.x > WINDOW_WIDTH ||
-      position.y < 0 ||
-      position.y > WINDOW_HEIGHT ||
+      !isInWindow(position) ||
       !!grid.grid[pixels2index(position.y)][pixels2index(position.x)]
     );
   }
@@ -155,12 +161,7 @@ class Ray {
 
     let foundHor = false;
     const hor = createVector(0, 0);
-    while (
-      next.x >= 0 &&
-      next.x <= WINDOW_WIDTH &&
-      next.y >= 0 &&
-      next.y <= WINDOW_HEIGHT
-    ) {
+    while (isInWindow(next)) {
       if (
         grid.hasWallAt(
           createVector(next.x, next.y - (this.isFacingDown ? 0 : 1))
@@ -189,12 +190,7 @@ class Ray {
 
     let foundVer = false;
     const ver = createVector(0, 0);
-    while (
-      next.x >= 0 &&
-      next.x <= WINDOW_WIDTH &&
-      next.y >= 0 &&
-      next.y <= WINDOW_HEIGHT
-    ) {
+    while (isInWindow(next)) {
       if (
         grid.hasWallAt(
           createVector(next.x - (this.isFacingRight ? 0 : 1), next.y)
