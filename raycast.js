@@ -28,7 +28,7 @@ function pixels2index(p) {
   return Math.floor(p / TILE_SIZE);
 }
 
-class Map {
+class Grid {
   constructor() {
     this.grid = [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -233,8 +233,11 @@ class Ray {
   }
 }
 
-const grid = new Map();
-const player = new Player();
+/** @type {Grid} */
+let grid;
+/** @type {Player} */
+let player;
+/** @type {Ray[]} */
 let rays = [];
 
 function keyPressed() {
@@ -325,6 +328,8 @@ function drawWalls() {
 function setup() {
   createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
   textAlign(CENTER, CENTER);
+  grid = new Grid();
+  player = new Player();
 }
 
 function update() {
