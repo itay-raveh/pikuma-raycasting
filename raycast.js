@@ -8,13 +8,15 @@ const MAP_NUM_ROWS = 11;
 const MAP_NUM_COLS = 15;
 
 const WINDOW_WIDTH = MAP_NUM_COLS * TILE_SIZE;
+const WINDOW_HALF_WIDTH = WINDOW_WIDTH / 2;
 const WINDOW_HEIGHT = MAP_NUM_ROWS * TILE_SIZE;
+const WINDOW_HALF_HEIGHT = WINDOW_HEIGHT / 2;
 
 const FOV = 60 * RAD;
 const RAY_WIDTH = 1;
 const RAY_COUNT = WINDOW_WIDTH / RAY_WIDTH;
 
-const DISTANCE_TO_PROJECTION = WINDOW_WIDTH / 2 / Math.tan(FOV / 2);
+const DISTANCE_TO_PROJECTION = WINDOW_HALF_WIDTH / Math.tan(FOV / 2);
 
 const MINIMAP_SCALE = 0.2;
 
@@ -85,7 +87,7 @@ class Grid {
 
 class Player {
   constructor() {
-    this.position = createVector(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+    this.position = createVector(WINDOW_HALF_WIDTH, WINDOW_HALF_HEIGHT);
     this.positionOffset = createVector(0, 0);
 
     this.radius = 5;
@@ -297,7 +299,7 @@ function drawWalls() {
     fill("black");
     rect(
       i * RAY_WIDTH,
-      WINDOW_HEIGHT / 2 - wallStripHeight / 2 - 1,
+      WINDOW_HALF_HEIGHT - wallStripHeight / 2 - 1,
       RAY_WIDTH,
       wallStripHeight + 2
     );
@@ -306,7 +308,7 @@ function drawWalls() {
     noStroke();
     rect(
       i * RAY_WIDTH,
-      WINDOW_HEIGHT / 2 - wallStripHeight / 2,
+      WINDOW_HALF_HEIGHT - wallStripHeight / 2,
       RAY_WIDTH,
       wallStripHeight
     );
@@ -331,14 +333,14 @@ function draw() {
   clear(DARK);
 
   fill(LIGHT);
-  rect(0, WINDOW_HEIGHT / 2, WINDOW_WIDTH, WINDOW_HEIGHT / 2);
+  rect(0, WINDOW_HALF_HEIGHT, WINDOW_WIDTH, WINDOW_HALF_HEIGHT);
 
   drawWalls();
 
   fill("black");
   rectMode(CENTER);
-  rect(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 1, 10);
-  rect(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 10, 1);
+  rect(WINDOW_HALF_WIDTH, WINDOW_HALF_HEIGHT, 1, 10);
+  rect(WINDOW_HALF_WIDTH, WINDOW_HALF_HEIGHT, 10, 1);
   rectMode(CORNER);
 
   // minimap
