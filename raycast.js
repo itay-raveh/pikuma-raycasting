@@ -45,13 +45,18 @@ class Grid {
     ];
   }
 
-  hasWallAt(x, y) {
+  /**
+   * Check if a wall exists at some pixel position.
+   *
+   * @param {ReturnType<typeof createVector>} position
+   */
+  hasWallAt(position) {
     return (
-      x < 0 ||
-      x > WINDOW_WIDTH ||
-      y < 0 ||
-      y > WINDOW_HEIGHT ||
-      !!grid.grid[pixels2index(y)][pixels2index(x)]
+      position.x < 0 ||
+      position.x > WINDOW_WIDTH ||
+      position.y < 0 ||
+      position.y > WINDOW_HEIGHT ||
+      !!grid.grid[pixels2index(position.y)][pixels2index(position.x)]
     );
   }
 
@@ -77,8 +82,7 @@ class Grid {
 
 class Player {
   constructor() {
-    this.x = WINDOW_WIDTH / 2;
-    this.y = WINDOW_HEIGHT / 2;
+    this.position = createVector(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
     this.radius = 5;
 
     this.forwardWalkOffset = 0;
@@ -93,27 +97,21 @@ class Player {
     const leftStep = this.leftwardWalkOffset * this.moveSpeed;
     const tangentAngle = this.angle - radians(90);
 
-    const x =
-      this.x +
-      Math.cos(this.angle) * forwardStep +
-      Math.cos(tangentAngle) * leftStep;
-    const y =
-      this.y +
-      Math.sin(this.angle) * forwardStep +
-      Math.sin(tangentAngle) * leftStep;
+    const move = createVector(
+      Math.cos(this.angle) * forwardStep + Math.cos(tangentAngle) * leftStep,
+      Math.sin(this.angle) * forwardStep + Math.sin(tangentAngle) * leftStep
+    );
+    const position = this.position.add(move);
 
-    if (!grid.hasWallAt(x, y)) {
-      this.x = x;
-      this.y = y;
-    }
+    if (!grid.hasWallAt(position)) this.position = position;
   }
 
   draw() {
     noStroke();
     fill("red");
     circle(
-      MINIMAP_SCALE * this.x,
-      MINIMAP_SCALE * this.y,
+      MINIMAP_SCALE * this.position.x,
+      MINIMAP_SCALE * this.position.y,
       MINIMAP_SCALE * this.radius
     );
   }
@@ -144,9 +142,11 @@ class Ray {
   cast() {
     let xintercept, yintercept, xstep, ystep;
 
-    yintercept = Math.floor(player.y / TILE_SIZE) * TILE_SIZE;
+    yintercept = Math.floor(player.position.y / TILE_SIZE) * TILE_SIZE;
     yintercept += this.isFacingDown ? TILE_SIZE : 0;
-    xintercept = player.x + (yintercept - player.y) / Math.tan(this.angle);
+    xintercept =
+      player.position.x +
+      (yintercept - player.position.y) / Math.tan(this.angle);
     ystep = TILE_SIZE;
     ystep *= this.isFacingDown ? 1 : -1;
     xstep = TILE_SIZE / Math.tan(this.angle);
@@ -165,7 +165,9 @@ class Ray {
       nextY >= 0 &&
       nextY <= WINDOW_HEIGHT
     ) {
-      if (grid.hasWallAt(nextX, nextY - (this.isFacingDown ? 0 : 1))) {
+      if (
+        grid.hasWallAt(createVector(nextX, nextY - (this.isFacingDown ? 0 : 1)))
+      ) {
         foundHor = true;
         horX = nextX;
         horY = nextY;
@@ -176,9 +178,11 @@ class Ray {
       nextY += ystep;
     }
 
-    xintercept = Math.floor(player.x / TILE_SIZE) * TILE_SIZE;
+    xintercept = Math.floor(player.position.x / TILE_SIZE) * TILE_SIZE;
     xintercept += this.isFacingRight ? TILE_SIZE : 0;
-    yintercept = player.y + (xintercept - player.x) * Math.tan(this.angle);
+    yintercept =
+      player.position.y +
+      (xintercept - player.position.x) * Math.tan(this.angle);
     xstep = TILE_SIZE;
     xstep *= this.isFacingRight ? 1 : -1;
     ystep = TILE_SIZE * Math.tan(this.angle);
@@ -197,7 +201,11 @@ class Ray {
       nextY >= 0 &&
       nextY <= WINDOW_HEIGHT
     ) {
-      if (grid.hasWallAt(nextX - (this.isFacingRight ? 0 : 1), nextY)) {
+      if (
+        grid.hasWallAt(
+          createVector(nextX - (this.isFacingRight ? 0 : 1), nextY)
+        )
+      ) {
         foundVer = true;
         verX = nextX;
         verY = nextY;
@@ -210,11 +218,11 @@ class Ray {
 
     const horDist = !foundHor
       ? Number.MAX_VALUE
-      : dist(player.x, player.y, horX, horY);
+      : dist(player.position.x, player.position.y, horX, horY);
 
     const verDist = !foundVer
       ? Number.MAX_VALUE
-      : dist(player.x, player.y, verX, verY);
+      : dist(player.position.x, player.position.y, verX, verY);
 
     this.hitX = horDist < verDist ? horX : verX;
     this.hitY = horDist < verDist ? horY : verY;
@@ -225,8 +233,8 @@ class Ray {
   draw() {
     stroke("red");
     line(
-      MINIMAP_SCALE * player.x,
-      MINIMAP_SCALE * player.y,
+      MINIMAP_SCALE * player.position.x,
+      MINIMAP_SCALE * player.position.y,
       MINIMAP_SCALE * this.hitX,
       MINIMAP_SCALE * this.hitY
     );
