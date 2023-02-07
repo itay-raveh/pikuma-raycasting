@@ -3,8 +3,12 @@
   <head>
     <title>Pikuma Raycasting</title>
     <script src="https://cdn.jsdelivr.net/npm/p5@0.7.3/lib/p5.js"></script>
+    <script>
+      // Load `p5` members to global scope
+      new p5();
+    </script>
     <link rel="stylesheet" href="styles.css" />
-    <script src="raycast.js"></script>
+    <script type="module" src="raycast.mjs"></script>
   </head>
   <body>
     <h1>Raycasting Demo</h1>
