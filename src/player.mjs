@@ -1,3 +1,4 @@
+/// <reference path="/home/vscode/.vscode-remote/extensions/samplavigne.p5-vscode-1.2.13/p5types/global.d.ts"/>
 import {
   MINIMAP_SCALE,
   WINDOW_HALF_HEIGHT,
