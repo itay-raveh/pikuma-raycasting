@@ -26,7 +26,7 @@ let RAYS = [];
 
 let CANVAS;
 
-window.keyPressed = function () {
+window.keyPressed = () => {
   switch (key) {
     case "w":
       PLAYER.positionOffset.y += 1;
@@ -43,7 +43,7 @@ window.keyPressed = function () {
   }
 };
 
-window.keyReleased = function () {
+window.keyReleased = () => {
   switch (key) {
     case "w":
       PLAYER.positionOffset.y -= 1;
@@ -116,7 +116,7 @@ function drawWalls() {
   }
 }
 
-window.setup = function () {
+window.setup = () => {
   CANVAS = createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT).elt;
 
   CANVAS.addEventListener("click", async () => {
@@ -129,7 +129,7 @@ function update() {
   castAllRays();
 }
 
-window.draw = function () {
+window.draw = () => {
   update();
 
   clear(DARK);
