@@ -5,7 +5,7 @@ import {
   WINDOW_HALF_WIDTH,
 } from "./consts.mjs";
 
-const DEG90 = radians(90);
+const HALF_PI = PI * 0.5;
 
 export class Player {
   constructor(grid) {
@@ -15,14 +15,14 @@ export class Player {
     this.positionOffset = createVector(0, 0);
 
     this.radius = 5;
-    this.angle = DEG90;
+    this.angle = HALF_PI;
     this.moveSpeed = 3;
     this.rotationSpeed = 0.01;
   }
 
   update() {
     const step = p5.Vector.mult(this.positionOffset, this.moveSpeed);
-    const tangentAngle = this.angle - DEG90;
+    const tangentAngle = this.angle - HALF_PI;
 
     const move = createVector(
       cos(this.angle) * step.y + cos(tangentAngle) * step.x,
