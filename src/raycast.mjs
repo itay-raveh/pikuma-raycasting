@@ -18,6 +18,8 @@ import { Ray } from "./ray.mjs";
 
 export const DISTANCE_TO_PROJECTION = WINDOW_HALF_WIDTH / tan(FOV_HALF);
 
+const _2PI = 2 * PI;
+
 const GRID = new Grid();
 const PLAYER = new Player(GRID);
 let RAYS = [];
@@ -66,13 +68,17 @@ window.mouseMoved = function () {
     PLAYER.angle += ((mouseX - pmouseX) * PLAYER.rotationSpeed) / windowWidth;
 };
 
+function normAngle(angle) {
+  return ((angle % _2PI) + _2PI) % _2PI;
+}
+
 function castAllRays() {
   let angle = PLAYER.angle - FOV_HALF;
 
   RAYS = [];
 
   for (let i = 0; i < RAY_COUNT; i++) {
-    const ray = new Ray(angle, GRID, PLAYER);
+    const ray = new Ray(normAngle(angle), GRID, PLAYER);
     ray.cast();
     RAYS.push(ray);
     angle += FOV / RAY_COUNT;
