@@ -24,6 +24,8 @@ const GRID = new Grid();
 const PLAYER = new Player(GRID);
 let RAYS = [];
 
+let CANVAS;
+
 window.keyPressed = function () {
   switch (key) {
     case "w":
@@ -58,15 +60,16 @@ window.keyReleased = function () {
   }
 };
 
-window.mouseMoved = function () {
-  if (
-    mouseY > 0 &&
-    mouseY < WINDOW_HEIGHT &&
-    mouseX > 0 &&
-    mouseX < WINDOW_WIDTH
-  )
-    PLAYER.angle += ((mouseX - pmouseX) * PLAYER.rotationSpeed) / windowWidth;
-};
+document.addEventListener(
+  "pointerlockchange",
+  () => {
+    window.mouseMoved =
+      document.pointerLockElement === CANVAS
+        ? (e) => (PLAYER.angle += e.movementX * PLAYER.rotationSpeed)
+        : () => {};
+  },
+  false
+);
 
 function normAngle(angle) {
   return ((angle % _2PI) + _2PI) % _2PI;
@@ -114,7 +117,11 @@ function drawWalls() {
 }
 
 window.setup = function () {
-  createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
+  CANVAS = createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT).elt;
+
+  CANVAS.addEventListener("click", async () => {
+    await CANVAS.requestPointerLock();
+  });
 };
 
 function update() {
