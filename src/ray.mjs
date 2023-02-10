@@ -7,7 +7,7 @@ export class Ray {
     this.grid = grid;
     this.player = player;
 
-    this.angle = angle % (2 * PI);
+    this.angle = angle;
     this.hit = createVector(0, 0);
     this.distance = 0;
     this.isHitVer = false;
