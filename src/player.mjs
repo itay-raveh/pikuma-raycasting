@@ -17,7 +17,7 @@ export class Player {
     this.radius = 5;
     this.angle = DEG90;
     this.moveSpeed = 3;
-    this.rotationSpeed = 10;
+    this.rotationSpeed = 0.01;
   }
 
   update() {
