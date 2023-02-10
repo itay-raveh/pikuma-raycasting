@@ -139,12 +139,6 @@ window.draw = function () {
 
   drawWalls();
 
-  fill(DARK);
-  rectMode(CENTER);
-  rect(WINDOW_HALF_WIDTH, WINDOW_HALF_HEIGHT, 1, 10);
-  rect(WINDOW_HALF_WIDTH, WINDOW_HALF_HEIGHT, 10, 1);
-  rectMode(CORNER);
-
   // minimap
   GRID.draw();
   for (const ray of RAYS) ray.draw();
