@@ -1,10 +1,10 @@
 /// <reference path="/home/vscode/.vscode-remote/extensions/samplavigne.p5-vscode-1.2.13/p5types/global.d.ts"/>
 import {
   FOV,
-  FOV_HALF,
   MINIMAP_SCALE,
-  RAY_COUNT,
+  RAY_WIDTH,
   TILE_SIZE,
+  WINDOW_WIDTH,
 } from "./consts.mjs";
 import { isInWindow } from "./grid.mjs";
 
@@ -106,14 +106,14 @@ export class Rays {
     this.grid = grid;
     this.player = player;
     this.rays = Array.from(
-      { length: RAY_COUNT },
+      { length: WINDOW_WIDTH / RAY_WIDTH },
       () => new Ray(this.grid, this.player)
     );
   }
 
   update() {
-    const startAngle = this.player.angle - FOV_HALF;
-    const stepAngle = FOV / RAY_COUNT;
+    const startAngle = this.player.angle - FOV / 2;
+    const stepAngle = FOV / (WINDOW_WIDTH / RAY_WIDTH);
     this.rays.forEach((ray, idx) => ray.cast(startAngle + idx * stepAngle));
   }
 
