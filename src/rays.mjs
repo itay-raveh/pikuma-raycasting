@@ -9,19 +9,19 @@ import {
 import { isInWindow } from "./grid.mjs";
 
 class Ray {
-  constructor(angle, grid, player) {
+  constructor(grid, player) {
     this.grid = grid;
     this.player = player;
+  }
 
-    this.angle = angle;
+  cast(angle) {
+    this.angle = normAngle(angle);
     this.hit = createVector(0, 0);
     this.distance = 0;
     this.isHitVer = false;
     this.isFacingDown = this.angle > 0 && this.angle < PI;
     this.isFacingRight = this.angle > 1.5 * PI || this.angle < 0.5 * PI;
-  }
 
-  cast() {
     const intercept = createVector(0, 0);
     const step = createVector(0, 0);
 
@@ -105,20 +105,16 @@ export class Rays {
   constructor(grid, player) {
     this.grid = grid;
     this.player = player;
-    this.rays = [];
+    this.rays = Array.from(
+      { length: RAY_COUNT },
+      () => new Ray(this.grid, this.player)
+    );
   }
 
   update() {
-    let angle = this.player.angle - FOV_HALF;
-
-    this.rays = [];
-
-    for (let i = 0; i < RAY_COUNT; i++) {
-      const ray = new Ray(normAngle(angle), this.grid, this.player);
-      ray.cast();
-      this.rays.push(ray);
-      angle += FOV / RAY_COUNT;
-    }
+    const startAngle = this.player.angle - FOV_HALF;
+    const stepAngle = FOV / RAY_COUNT;
+    this.rays.forEach((ray, idx) => ray.cast(startAngle + idx * stepAngle));
   }
 
   draw() {
