@@ -17,7 +17,8 @@ export class Walls {
   draw() {
     for (const i in this.rays.rays) {
       const ray = this.rays.rays[i];
-      const distance = ray.distance * cos(ray.angle - this.player.angle);
+      const distance =
+        this.player.position.dist(ray.hit) * cos(ray.angle - this.player.angle);
       const wallStripHeight =
         (TILE_SIZE / distance) * (WINDOW_HALF_WIDTH / tan(FOV / 2));
 
