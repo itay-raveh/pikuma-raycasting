@@ -95,16 +95,6 @@ class Ray {
     this.distance = min(horDist, verDist);
     this.isHitVer = verDist < horDist;
   }
-
-  draw() {
-    stroke("red");
-    line(
-      MINIMAP_SCALE * this.player.position.x,
-      MINIMAP_SCALE * this.player.position.y,
-      MINIMAP_SCALE * this.hit.x,
-      MINIMAP_SCALE * this.hit.y
-    );
-  }
 }
 
 function normAngle(angle) {
@@ -132,6 +122,14 @@ export class Rays {
   }
 
   draw() {
-    this.rays.forEach((ray) => ray.draw());
+    this.rays.forEach((ray) => {
+      stroke("red");
+      line(
+        MINIMAP_SCALE * this.player.position.x,
+        MINIMAP_SCALE * this.player.position.y,
+        MINIMAP_SCALE * ray.hit.x,
+        MINIMAP_SCALE * ray.hit.y
+      );
+    });
   }
 }
