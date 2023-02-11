@@ -1,41 +1,24 @@
 import {
   DARK,
-  FOV,
   FOV_HALF,
-  RAY_COUNT,
   RAY_WIDTH,
   TILE_SIZE,
   WINDOW_HALF_HEIGHT,
   WINDOW_HALF_WIDTH,
 } from "./consts.mjs";
-import { Ray } from "./ray.mjs";
 
-const _2PI = 2 * PI;
 export const DISTANCE_TO_PROJECTION = WINDOW_HALF_WIDTH / tan(FOV_HALF);
 
 export class Walls {
-  constructor(grid, player) {
+  constructor(grid, player, rays) {
     this.grid = grid;
     this.player = player;
-    this.rays = [];
-  }
-
-  update() {
-    let angle = this.player.angle - FOV_HALF;
-
-    this.rays = [];
-
-    for (let i = 0; i < RAY_COUNT; i++) {
-      const ray = new Ray(normAngle(angle), this.grid, this.player);
-      ray.cast();
-      this.rays.push(ray);
-      angle += FOV / RAY_COUNT;
-    }
+    this.rays = rays;
   }
 
   draw() {
-    for (const i in this.rays) {
-      const ray = this.rays[i];
+    for (const i in this.rays.rays) {
+      const ray = this.rays.rays[i];
       const distance = ray.distance * cos(ray.angle - this.player.angle);
       const wallStripHeight = (TILE_SIZE / distance) * DISTANCE_TO_PROJECTION;
 
@@ -51,7 +34,7 @@ export class Walls {
         RAY_WIDTH,
         wallStripHeight + 2
       );
-      if (i > 0 && ray.isHitVer !== this.rays[i - 1].isHitVer) fill(DARK);
+      if (i > 0 && ray.isHitVer !== this.rays.rays[i - 1].isHitVer) fill(DARK);
       else fill(`rgb(${b},${b},${b})`);
       noStroke();
       rect(
@@ -62,8 +45,4 @@ export class Walls {
       );
     }
   }
-}
-
-function normAngle(angle) {
-  return ((angle % _2PI) + _2PI) % _2PI;
 }
