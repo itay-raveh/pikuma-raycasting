@@ -10,9 +10,7 @@ export const WINDOW_HEIGHT = MAP_NUM_ROWS * TILE_SIZE;
 export const WINDOW_HALF_HEIGHT = WINDOW_HEIGHT / 2;
 
 export const FOV = radians(60);
-export const FOV_HALF = FOV / 2;
 export const RAY_WIDTH = 1;
-export const RAY_COUNT = WINDOW_WIDTH / RAY_WIDTH;
 
 export const MINIMAP_SCALE = 0.2;
 

@@ -1,13 +1,11 @@
 import {
   DARK,
-  FOV_HALF,
+  FOV,
   RAY_WIDTH,
   TILE_SIZE,
   WINDOW_HALF_HEIGHT,
   WINDOW_HALF_WIDTH,
 } from "./consts.mjs";
-
-export const DISTANCE_TO_PROJECTION = WINDOW_HALF_WIDTH / tan(FOV_HALF);
 
 export class Walls {
   constructor(grid, player, rays) {
@@ -20,11 +18,12 @@ export class Walls {
     for (const i in this.rays.rays) {
       const ray = this.rays.rays[i];
       const distance = ray.distance * cos(ray.angle - this.player.angle);
-      const wallStripHeight = (TILE_SIZE / distance) * DISTANCE_TO_PROJECTION;
+      const wallStripHeight =
+        ((TILE_SIZE / distance) * WINDOW_HALF_WIDTH) / tan(FOV / 2);
 
       const b = round(
         255 -
-          (distance * 150) / DISTANCE_TO_PROJECTION +
+          (distance * 150) / WINDOW_HALF_WIDTH / tan(FOV / 2) +
           (ray.isHitVer ? 50 : 0)
       );
       fill(DARK);
