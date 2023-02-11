@@ -1,8 +1,16 @@
 /// <reference path="/home/vscode/.vscode-remote/extensions/samplavigne.p5-vscode-1.2.13/p5types/global.d.ts"/>
-import { MINIMAP_SCALE, TILE_SIZE } from "./consts.mjs";
+import {
+  FOV,
+  FOV_HALF,
+  MINIMAP_SCALE,
+  RAY_COUNT,
+  TILE_SIZE,
+} from "./consts.mjs";
 import { isInWindow } from "./grid.mjs";
 
-export class Ray {
+const _2PI = 2 * PI;
+
+class Ray {
   constructor(angle, grid, player) {
     this.grid = grid;
     this.player = player;
@@ -98,5 +106,34 @@ export class Ray {
       MINIMAP_SCALE * this.hit.x,
       MINIMAP_SCALE * this.hit.y
     );
+  }
+}
+
+function normAngle(angle) {
+  return ((angle % _2PI) + _2PI) % _2PI;
+}
+
+export class Rays {
+  constructor(grid, player) {
+    this.grid = grid;
+    this.player = player;
+    this.rays = [];
+  }
+
+  update() {
+    let angle = this.player.angle - FOV_HALF;
+
+    this.rays = [];
+
+    for (let i = 0; i < RAY_COUNT; i++) {
+      const ray = new Ray(normAngle(angle), this.grid, this.player);
+      ray.cast();
+      this.rays.push(ray);
+      angle += FOV / RAY_COUNT;
+    }
+  }
+
+  draw() {
+    this.rays.forEach((ray) => ray.draw());
   }
 }

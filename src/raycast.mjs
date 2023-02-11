@@ -8,11 +8,13 @@ import {
 } from "./consts.mjs";
 import { Grid } from "./grid.mjs";
 import { Player } from "./player.mjs";
+import { Rays } from "./rays.mjs";
 import { Walls } from "./walls.mjs";
 
 const GRID = new Grid();
 const PLAYER = new Player(GRID);
-const WALLS = new Walls(GRID, PLAYER);
+const RAYS = new Rays(GRID, PLAYER);
+const WALLS = new Walls(GRID, PLAYER, RAYS);
 
 let CANVAS;
 
@@ -71,7 +73,7 @@ window.setup = () => {
 
 function update() {
   PLAYER.update();
-  WALLS.update();
+  RAYS.update();
 }
 
 window.draw = () => {
@@ -86,6 +88,6 @@ window.draw = () => {
 
   // minimap
   GRID.draw();
-  for (const ray of WALLS.rays) ray.draw();
+  RAYS.draw();
   PLAYER.draw();
 };
