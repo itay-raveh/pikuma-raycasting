@@ -16,6 +16,9 @@ const PLAYER = new Player(GRID);
 const RAYS = new Rays(GRID, PLAYER);
 const WALLS = new Walls(GRID, PLAYER, RAYS);
 
+const UPDATEABLES = [PLAYER, RAYS];
+const DRAWABLES = [WALLS, GRID, RAYS, PLAYER];
+
 let CANVAS;
 
 window.keyPressed = () => {
@@ -71,23 +74,12 @@ window.setup = () => {
   });
 };
 
-function update() {
-  PLAYER.update();
-  RAYS.update();
-}
-
 window.draw = () => {
-  update();
-
   clear(DARK);
 
   fill(LIGHT);
   rect(0, WINDOW_HALF_HEIGHT, WINDOW_WIDTH, WINDOW_HALF_HEIGHT);
 
-  WALLS.draw();
-
-  // minimap
-  GRID.draw();
-  RAYS.draw();
-  PLAYER.draw();
+  UPDATEABLES.forEach((updateable) => updateable.update());
+  DRAWABLES.forEach((drawable) => drawable.draw());
 };
