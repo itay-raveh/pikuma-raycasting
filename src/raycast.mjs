@@ -17,7 +17,7 @@ const RAYS = new Rays(GRID, PLAYER);
 const WALLS = new Walls(GRID, PLAYER, RAYS);
 
 const UPDATEABLES = [PLAYER, RAYS];
-const DRAWABLES = [WALLS, GRID, RAYS, PLAYER];
+const DRAWABLES = [WALLS, GRID, RAYS];
 
 let CANVAS;
 

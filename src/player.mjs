@@ -1,9 +1,5 @@
 /// <reference path="/home/vscode/.vscode-remote/extensions/samplavigne.p5-vscode-1.2.13/p5types/global.d.ts"/>
-import {
-  MINIMAP_SCALE,
-  WINDOW_HALF_HEIGHT,
-  WINDOW_HALF_WIDTH,
-} from "./consts.mjs";
+import { WINDOW_HALF_HEIGHT, WINDOW_HALF_WIDTH } from "./consts.mjs";
 
 export class Player {
   constructor(grid) {
@@ -12,7 +8,6 @@ export class Player {
     this.position = createVector(WINDOW_HALF_WIDTH, WINDOW_HALF_HEIGHT);
     this.positionOffset = createVector(0, 0);
 
-    this.radius = 5;
     this.angle = HALF_PI;
     this.moveSpeed = 3;
     this.rotationSpeed = 0.01;
@@ -29,15 +24,5 @@ export class Player {
     const position = p5.Vector.add(this.position, move);
 
     if (!this.grid.hasWallAt(position)) this.position = position;
-  }
-
-  draw() {
-    noStroke();
-    fill("red");
-    circle(
-      MINIMAP_SCALE * this.position.x,
-      MINIMAP_SCALE * this.position.y,
-      MINIMAP_SCALE * this.radius
-    );
   }
 }
