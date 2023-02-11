@@ -8,8 +8,6 @@ import {
 } from "./consts.mjs";
 import { isInWindow } from "./grid.mjs";
 
-const _2PI = 2 * PI;
-
 class Ray {
   constructor(angle, grid, player) {
     this.grid = grid;
@@ -110,7 +108,7 @@ class Ray {
 }
 
 function normAngle(angle) {
-  return ((angle % _2PI) + _2PI) % _2PI;
+  return ((angle % TWO_PI) + TWO_PI) % TWO_PI;
 }
 
 export class Rays {

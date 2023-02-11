@@ -5,8 +5,6 @@ import {
   WINDOW_HALF_WIDTH,
 } from "./consts.mjs";
 
-const HALF_PI = PI * 0.5;
-
 export class Player {
   constructor(grid) {
     this.grid = grid;
