@@ -19,11 +19,11 @@ export class Walls {
       const ray = this.rays.rays[i];
       const distance = ray.distance * cos(ray.angle - this.player.angle);
       const wallStripHeight =
-        ((TILE_SIZE / distance) * WINDOW_HALF_WIDTH) / tan(FOV / 2);
+        (TILE_SIZE / distance) * (WINDOW_HALF_WIDTH / tan(FOV / 2));
 
       const b = round(
         255 -
-          (distance * 150) / WINDOW_HALF_WIDTH / tan(FOV / 2) +
+          (distance * 150) / (WINDOW_HALF_WIDTH / tan(FOV / 2)) +
           (ray.isHitVer ? 50 : 0)
       );
       fill(DARK);
