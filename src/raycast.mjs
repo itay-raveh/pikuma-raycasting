@@ -1,11 +1,6 @@
 /// <reference path="/home/vscode/.vscode-remote/extensions/samplavigne.p5-vscode-1.2.13/p5types/global.d.ts"/>
-import {
-  DARK,
-  LIGHT,
-  WINDOW_HALF_HEIGHT,
-  WINDOW_HEIGHT,
-  WINDOW_WIDTH,
-} from "./consts.mjs";
+import { DARK, WINDOW_HEIGHT, WINDOW_WIDTH } from "./consts.mjs";
+import { Floor } from "./floor.mjs";
 import { Grid } from "./grid.mjs";
 import { Player } from "./player.mjs";
 import { Rays } from "./rays.mjs";
@@ -14,10 +9,9 @@ import { Walls } from "./walls.mjs";
 const GRID = new Grid();
 const PLAYER = new Player(GRID);
 const RAYS = new Rays(GRID, PLAYER);
-const WALLS = new Walls(GRID, PLAYER, RAYS);
 
 const UPDATEABLES = [PLAYER, RAYS];
-const DRAWABLES = [WALLS, GRID, RAYS];
+const DRAWABLES = [new Floor(), new Walls(PLAYER, RAYS), GRID, RAYS];
 
 let CANVAS;
 
@@ -76,12 +70,6 @@ window.setup = () => {
 
 window.draw = () => {
   clear(DARK);
-
-  push();
-  noStroke();
-  fill(LIGHT);
-  rect(0, WINDOW_HALF_HEIGHT, WINDOW_WIDTH, WINDOW_HALF_HEIGHT);
-  pop();
 
   UPDATEABLES.forEach((updateable) => updateable.update());
   DRAWABLES.forEach((drawable) => {
