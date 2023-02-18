@@ -114,8 +114,8 @@ export class Rays {
   }
 
   draw() {
+    stroke("red");
     this.rays.forEach((ray) => {
-      stroke("red");
       line(
         MINIMAP_SCALE * this.player.position.x,
         MINIMAP_SCALE * this.player.position.y,

@@ -51,12 +51,11 @@ export class Grid {
   }
 
   draw() {
+    stroke(DARK);
     for (const i in this.grid) {
       for (const j in this.grid[i]) {
         const x = j * TILE_SIZE;
         const y = i * TILE_SIZE;
-
-        stroke(DARK);
 
         fill(this.grid[i][j] ? DARK : LIGHT);
         rect(
