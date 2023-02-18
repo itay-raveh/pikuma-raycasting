@@ -77,9 +77,16 @@ window.setup = () => {
 window.draw = () => {
   clear(DARK);
 
+  push();
+  noStroke();
   fill(LIGHT);
   rect(0, WINDOW_HALF_HEIGHT, WINDOW_WIDTH, WINDOW_HALF_HEIGHT);
+  pop();
 
   UPDATEABLES.forEach((updateable) => updateable.update());
-  DRAWABLES.forEach((drawable) => drawable.draw());
+  DRAWABLES.forEach((drawable) => {
+    push();
+    drawable.draw();
+    pop();
+  });
 };
