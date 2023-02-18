@@ -14,5 +14,6 @@ export const RAY_WIDTH = 1;
 
 export const MINIMAP_SCALE = 0.2;
 
-export const DARK = "#222";
-export const LIGHT = "#fff";
+export const DARK = color("#222");
+export const SHADOW = color("#888");
+export const LIGHT = color("#fff");
