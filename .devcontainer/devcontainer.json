@@ -7,7 +7,8 @@
         "samplavigne.p5-vscode",
         "esbenp.prettier-vscode",
         "seatonjiang.gitmoji-vscode",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "ms-vscode.cpptools"
       ]
     }
   }
