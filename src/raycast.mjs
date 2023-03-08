@@ -1,4 +1,4 @@
-/// <reference path="/home/vscode/.vscode-remote/extensions/samplavigne.p5-vscode-1.2.13/p5types/global.d.ts"/>
+/// <reference path="/home/codespace/.vscode-remote/extensions/samplavigne.p5-vscode-1.2.13/p5types/global.d.ts"/>
 import { DARK, WINDOW_HEIGHT, WINDOW_WIDTH } from "./consts.mjs";
 import { Floor } from "./floor.mjs";
 import { Grid } from "./grid.mjs";

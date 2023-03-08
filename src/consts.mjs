@@ -1,4 +1,4 @@
-/// <reference path="/home/vscode/.vscode-remote/extensions/samplavigne.p5-vscode-1.2.13/p5types/global.d.ts"/>
+/// <reference path="/home/codespace/.vscode-remote/extensions/samplavigne.p5-vscode-1.2.13/p5types/global.d.ts"/>
 export const TILE_SIZE = 60;
 
 const MAP_NUM_ROWS = 11;
